@@ -36,6 +36,6 @@ class Server(threading.Thread):
                             ])
         self.server = server
         pb2grpc.add_uploadServiceServicer_to_server(gRPCService(), server)
-        server.add_insecure_port('localhost:8081')
+        server.add_insecure_port('0.0.0.0:8081')
         server.start()
         server.wait_for_termination()

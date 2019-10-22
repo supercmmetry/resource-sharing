@@ -60,7 +60,7 @@ class MainBackend(QtCore.QObject):
         else:
             fileModelProvider.model.reset([])
             #insert progress-bar animation
-
+            print("loading files from: " + ip)
             client = grpcClient.Client(ip)
             files = client.GetFiles()
             fp = []
