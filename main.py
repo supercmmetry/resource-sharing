@@ -5,16 +5,15 @@ from qmlModels import window
 from qmlModels import contact_model
 from qmlModels import file_model
 import socket
-
 import utils
 from utils import getContactsFromDB
 
 
 backendWindow = window.BackendWindow()
 contactModelProvider = contact_model.ContactModelProvider([])
-fileModelProvider = file_model.FileModelProvider([{"name": "sample.txt", "pubstr": "(public)"}])
-
+fileModelProvider = file_model.FileModelProvider([])
 currContacts = []
+
 
 class MainBackend(QtCore.QObject):
     ipsignal = QtCore.Signal()
@@ -80,14 +79,12 @@ class MainBackend(QtCore.QObject):
         fp = utils.getFilesDB()
         fileModelProvider.model.reset(fp)
     
-
     @QtCore.Slot(str)
     def makePrivate(self, filename):
         filename_nu = filename.replace("file://", "")
         utils.makePrivate(filename_nu)
         fp = utils.getFilesDB()
         fileModelProvider.model.reset(fp)
-    
 
 
 mainBackend = MainBackend()
@@ -121,5 +118,4 @@ if __name__ == '__main__':
     qtBind(engine)
     loadContacts()
     app.exec_()
-
 
