@@ -26,31 +26,31 @@ QtObject {
     property var windowTitleBarBottomOffset: 20
 
 
-    property var leftChatBubbleBackgroundColor: "#ffffff"
-    property var rightChatBubbleBackgroundColor: "#859ffe"
-    property var chatBackgroundColor: "#ddddf7"
-    property var chatBubbleRadius: 3
-    property var chatBubblePadding: 20
-    property var leftChatBubbleForegroundColor: "#8d88b0"
-    property var rightChatBubbleForegroundColor: "#f1f3ff"
-    property var chatBubbleFontPointSize: 10
+    property var leftfileBubbleBackgroundColor: "#ffffff"
+    property var rightfileBubbleBackgroundColor: "#859ffe"
+    property var fileBackgroundColor: "#ddddf7"
+    property var fileBubbleRadius: 3
+    property var fileBubblePadding: 20
+    property var leftfileBubbleForegroundColor: "#8d88b0"
+    property var rightfileBubbleForegroundColor: "#f1f3ff"
+    property var fileBubbleFontPointSize: 10
     property var consecutiveBubbleSpacing: 40
     property var consecutiveSameBubbleSpacing: 5
-    property var chatBubbleOutgrowthOffset: 10
-    property var chatBubbleHorizontalPadding: 10
-    property var chatBubbleVerticalPadding: 10
-    property var chatBubbleDropShadowVerticalOffset: 1
-    property var chatBubbleDropShadowHorizontalOffset: 1
+    property var fileBubbleOutgrowthOffset: 10
+    property var fileBubbleHorizontalPadding: 10
+    property var fileBubbleVerticalPadding: 10
+    property var fileBubbleDropShadowVerticalOffset: 1
+    property var fileBubbleDropShadowHorizontalOffset: 1
 
-    property var chatListViewScrollBarHorizontalOffset: 10
+    property var fileListViewScrollBarHorizontalOffset: 10
 
-    property var chatMessageContainerBackgroundColor: "#ffffff"
-    property var chatMessageContainerHeight: 40
+    property var fileMessageContainerBackgroundColor: "#ffffff"
+    property var fileMessageContainerHeight: 40
 
-    property var chatHeaderContainerHeight: 40
-    property var chatHeaderContainerBackgroundColor: "#5e5c8d"
-    property var chatHeaderForegroundColor: "#c2c1ed"
-    property var chatHeaderFontPointSize: 10
+    property var fileHeaderContainerHeight: 40
+    property var fileHeaderContainerBackgroundColor: "#5e5c8d"
+    property var fileHeaderForegroundColor: "#c2c1ed"
+    property var fileHeaderFontPointSize: 10
 
     property var contactHeaderContainerBackgroundColor: "#2e2c51"
     property var contactHeaderContainerForegroundColor: "#d3cdf9"
@@ -113,7 +113,7 @@ QtObject {
                 id: cr_textContent
 
                 anchors.left: cr_image.right
-                width: cr_msgcount.x - x - 10
+                width: btnCtDelete.x - x - 10
                 color: transparentColor
                 Text {
                     id: cr_text
@@ -130,29 +130,65 @@ QtObject {
                 }
             }
 
-            Rectangle {
-                id: cr_msgcount
-                anchors.verticalCenter: parent.verticalCenter
-                height: msgCountMarkerSize
-                x: parent.width - width - contactSearchBarContainerHeight / 4
-                radius: 3
-                visible: false
-                color: msgCountMarkerColor
+            
 
-            }
+            
+
+
+            
 
             MouseArea {
                 id: cr_mouseArea
                 anchors.fill: parent
                 hoverEnabled: true
-
                 onHoveredChanged: {
                     contactRow.color = cr_mouseArea.containsMouse ? contactRowFocusColor : transparentColor
+
                 }
 
                 onClicked: {
                     contactRow.listViewTree.currentIndex = index
                     //console.log(contactRow.listViewTree.model.get(index))
+                }
+
+            }
+
+            RoundButton {
+                id: btnCtDelete
+                x: parent.width - width - 10
+                anchors.verticalCenter: parent.verticalCenter
+                height: parent.height / 3
+                width: btnCtText.width + 10
+                radius: 5
+                visible: dhtId !== "127.0.0.1"
+                background: Rectangle {
+                    id: btnctdeleterect
+                    anchors.fill: parent
+                    radius: parent.radius
+                    color: "#5e5c8d"
+                    border.color: "white"
+                    border.width: 1
+
+                    Text {
+                        id: btnCtText
+                        text: "Delete"
+                        anchors.centerIn: parent
+                        font.pointSize: 8
+                        color: "white"
+                    }
+
+                    MouseArea {
+                        id: btnctdelete_ma
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onHoveredChanged: {
+                            parent.color = containsMouse ? "#3e3c6d" : "#5e5c8d";
+                        }
+
+                        onClicked: {
+                            mainBackend.contactDelete(dhtId)
+                        }
+                    }
                 }
             }
 
@@ -290,6 +326,8 @@ QtObject {
                         onClicked: {
                             if(btnFileActionText.text === "Delete") {
                                 mainBackend.deleteFile(name)
+                            } else if(btnFileActionText.text === "Download") {
+                                mainBackend.downloadFile(name)
                             }
                         }
                     }

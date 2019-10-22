@@ -85,6 +85,19 @@ def getPublicFilesDB():
     return files
 
 
+def getPublicFilesDB_thread():
+    conn_t = getConnectionDB()
+    sql_query = f"select filename from resources where public=0"
+    cur = conn_t.cursor()
+    cur.execute(sql_query)
+    rows = cur.fetchall()
+    files = []
+    for row in rows:
+        files.append(row["filename"])
+    conn_t.close()
+    return files
+
+
 def getFilesDB():
     sql_query = f"select filename, public from resources"
     cur = conn.cursor()
@@ -126,3 +139,15 @@ def convjsontolist(js):
     return json.loads(js)["result"]
 
 
+def createDir(dirname):
+    if not os.path.isdir(dirname):
+        os.makedirs(dirname)
+
+def getFileName(filename):
+    return filename.split('/')[-1]
+
+def deleteContact(ip):
+    sql_query = f"delete from contacts where ip='{ip}'"
+    cur = conn.cursor()
+    cur.execute(sql_query)
+    conn.commit()

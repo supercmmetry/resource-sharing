@@ -161,23 +161,23 @@ ApplicationWindow {
 
         }
 
-        //chat layouts
+        //file layouts
 
         Rectangle {
-            id: chatHeaderContainer
+            id: fileHeaderContainer
             anchors.top: windowTitleBar.bottom
 
-            anchors.right: chatContainer.right
-            height: Resources.chatHeaderContainerHeight
-            width: chatContainer.width
-            color: Resources.chatHeaderContainerBackgroundColor
+            anchors.right: fileContainer.right
+            height: Resources.fileHeaderContainerHeight
+            width: fileContainer.width
+            color: Resources.fileHeaderContainerBackgroundColor
 
             Text {
-                id: chatHeaderText
+                id: fileHeaderText
                 x: 30
                 anchors.verticalCenter: parent.verticalCenter
-                color: Resources.chatHeaderForegroundColor
-                font.pointSize: Resources.chatHeaderFontPointSize
+                color: Resources.fileHeaderForegroundColor
+                font.pointSize: Resources.fileHeaderFontPointSize
                 text: contactModelProvider.model.getName(contactListView.currentIndex)
                 rightPadding: 10
             }
@@ -185,7 +185,7 @@ ApplicationWindow {
 
             RoundButton {
                 id: btnAddFile
-                anchors.left: chatHeaderText.right
+                anchors.left: fileHeaderText.right
                 anchors.verticalCenter: parent.verticalCenter
                 height: parent.height / 2
                 width: btnAddText.width + 10
@@ -230,12 +230,12 @@ ApplicationWindow {
         }
 
         Rectangle {
-            id: chatContainer
+            id: fileContainer
             x: parent.width / 3
 
             width: 2 * parent.width / 3
             anchors.bottom: parent.bottom
-            anchors.top: chatHeaderContainer.bottom
+            anchors.top: fileHeaderContainer.bottom
 
             color: Resources.contactContainerBackgroundColor
 
@@ -270,7 +270,7 @@ ApplicationWindow {
             id: contactSearchBarContainer
             anchors.top: windowTitleBar.bottom
             anchors.left: windowTitleBar.left
-            anchors.right: chatContainer.left
+            anchors.right: fileContainer.left
             height: Resources.contactSearchBarContainerHeight
             color: Resources.contactSearchBarContainerBackgroundColor
             border.width: 1
@@ -401,7 +401,7 @@ ApplicationWindow {
             anchors.top: contactSearchBarContainer.bottom
             anchors.bottom: extrasContainer.top
             anchors.left: parent.left
-            anchors.right: chatContainer.left
+            anchors.right: fileContainer.left
             color: Resources.contactContainerBackgroundColor
             property var selectedItemName
             ListView {
@@ -418,7 +418,8 @@ ApplicationWindow {
                 delegate: Resources.contactDelegate
 
                 onCurrentIndexChanged: {
-                    mainBackend.loadChat(contactModelProvider.model.getDHTId(currentIndex))
+                    mainBackend.loadFiles(contactModelProvider.model.getDHTId(currentIndex))
+                    mainBackend.setTargetIP(contactModelProvider.model.getDHTId(currentIndex))
                     fileListView.contactCurrentIndex = currentIndex
                 }
             }
@@ -427,8 +428,8 @@ ApplicationWindow {
         Rectangle {
             id: extrasContainer
             radius: Resources.windowCornerRadius
-            height: Resources.chatMessageContainerHeight
-            anchors.right: chatHeaderContainer.left
+            height: Resources.fileMessageContainerHeight
+            anchors.right: fileHeaderContainer.left
             anchors.left: parent.left
             anchors.bottom: parent.bottom
             color: Resources.extrasContainerBackgroundColor
@@ -474,6 +475,7 @@ ApplicationWindow {
 
             onAccepted: {
                 mainBackend.addFile(addFileDialog.fileUrls)
+                mainBackend.loadFiles('127.0.0.1')
             }
         }
 
